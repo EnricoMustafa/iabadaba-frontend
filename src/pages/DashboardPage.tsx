@@ -1,4 +1,5 @@
 import '../styles/dashboard.css'
+import { useAuth } from '../contexts/AuthContext'
 
 function Logo() {
   return (
@@ -13,6 +14,8 @@ function Logo() {
 }
 
 export function DashboardPage() {
+  const {user} = useAuth();
+
   return (
     <div className="dash-layout">
 
@@ -61,7 +64,7 @@ export function DashboardPage() {
           <div className="user-pill">
             <div className="user-avatar">E</div>
             <div>
-              <p className="user-info-name">Enrico</p>
+              <p className="user-info-name">{user?.name}</p>
               <p className="user-info-role">Pessoal</p>
             </div>
           </div>

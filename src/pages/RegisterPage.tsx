@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
 import '../styles/auth.css'
+import { useState } from 'react'
+import { useAuth } from '../contexts/AuthContext'
 
 const TICKER = 'iabadaba · iabadaba · iabadaba · iabadaba · iabadaba · iabadaba · iabadaba · iabadaba · '
 
@@ -16,6 +18,35 @@ function Logo() {
 }
 
 export function RegisterPage() {
+
+  const [ name, setName ] = useState('');
+  const [ email, setEmail ] = useState('');
+  const [ password, setPassword ] = useState('');
+  const [ error, setError ] = useState('');
+  const [ message, setMessage ] = useState('');
+  const {register} = useAuth();
+
+  const handleSubmit = async (e:  React.FormEvent<HTMLFormElement>) => {
+
+    e.preventDefault();
+
+    setError('');
+
+    if(!email) return setError('Email invalido');
+
+    if(password.length < 6) return setError('Minimo de 6 digitos')
+    
+      try{
+        await register(name, email, password);
+        setMessage('Usuario Criado!');
+        setTimeout(()=>{
+          setMessage('');
+        }, 5000);
+      }catch{
+        setError('Falha ao criar um usuario');
+      }
+
+  }
   return (
     <div className="auth-bg">
 
@@ -41,23 +72,24 @@ export function RegisterPage() {
           <p className="auth-brand-tagline">criar conta</p>
         </div>
 
-        <form className="auth-form">
+        <form className="auth-form" onSubmit={handleSubmit}>
           <div className="field">
             <label className="field-label">Nome</label>
-            <input className="field-input" type="text" placeholder="Seu nome" />
+            <input className="field-input" type="text" placeholder="Seu nome" value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="field">
             <label className="field-label">Email</label>
-            <input className="field-input" type="email" placeholder="seu@email.com" />
+            <input className="field-input" type="email" placeholder="seu@email.com" value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
           <div className="field">
             <label className="field-label">Senha</label>
-            <input className="field-input" type="password" placeholder="••••••••" />
+            <input className="field-input" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)}/>
           </div>
-          <div className="field">
+          {(error || message) && <p>{error || message}</p>}
+          {/* <div className="field">
             <label className="field-label">Confirmar Senha</label>
-            <input className="field-input" type="password" placeholder="••••••••" />
-          </div>
+            <input className="field-input" type="password" placeholder="••••••••"/>
+          </div> */}
           <button className="btn-submit" type="submit">criar conta</button>
         </form>
 
