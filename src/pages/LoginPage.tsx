@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom'
-import '../styles/auth.css'
-import { useAuth } from '../contexts/AuthContext'
-import { useState } from 'react'
+import '../styles/auth.css';
+import { useAuth } from '../contexts/AuthContext';
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 
 const TICKER = 'iabadaba · iabadaba · iabadaba · iabadaba · iabadaba · iabadaba · iabadaba · iabadaba · '
 
@@ -18,14 +18,30 @@ function Logo() {
 }
 
 export function LoginPage() {
-  const { login } = useAuth()
-  const [email, setEmail] = useState();
-  const [ password, setPassword ] = useState();
+  const [email, setEmail] = useState('');
+  const [ password, setPassword ] = useState('');
+  const [ error, setError ] = useState('');
+  const {login} = useAuth()
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-    await login(email,password)
+    if(!email || !password) {
+      return setError('Credenciasi invalidas!')
+    }
+
+    try{
+      await login(email, password);
+      navigate('/dashboard');
+    }catch{
+      setError('Email ou senha incorreta!')
+      setTimeout(()=>{
+        setError('')
+      }, 5000);
+    }
+
+
   }
   return (
     <div className="auth-bg">
@@ -52,17 +68,18 @@ export function LoginPage() {
           <p className="auth-brand-tagline">controle financeiro</p>
         </div>
 
-        <form className="auth-form">
+        <form className="auth-form" onSubmit={ handleSubmit }>
           <div className="field">
             <label className="field-label">Email</label>
-            <input className="field-input" type="email" placeholder="seu@email.com" />
+            <input className="field-input" type="email" placeholder="seu@email.com" value={email} onChange={(e) => setEmail(e.target.value)}/>
           </div>
           <div className="field">
             <label className="field-label">Senha</label>
-            <input className="field-input" type="password" placeholder="••••••••" />
+            <input className="field-input" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)}/>
           </div>
           <button className="btn-submit" type="submit">entrar</button>
         </form>
+        <p>{error}</p>
 
         <p className="auth-footer">
           Não tem conta?{' '}
