@@ -65,7 +65,7 @@ export function DashboardPage() {
             <div className="user-avatar">E</div>
             <div>
               <p className="user-info-name">{user?.name}</p>
-              <p className="user-info-role">Pessoal</p>
+              <p className="user-info-role">{}</p>
             </div>
           </div>
         </div>

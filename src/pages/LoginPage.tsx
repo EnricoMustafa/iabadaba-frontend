@@ -28,20 +28,20 @@ export function LoginPage() {
     e.preventDefault();
 
     if(!email || !password) {
-      return setError('Credenciasi invalidas!')
+      return showError('Credenciasi invalidas!')
     }
 
     try{
       await login(email, password);
       navigate('/dashboard');
     }catch{
-      setError('Email ou senha incorreta!')
-      setTimeout(()=>{
-        setError('')
-      }, 5000);
+      showError('Credenciais incorreta!')
     }
+  }
 
-
+  const showError = (msg: string) => {
+    setError(msg)
+    setTimeout(() => { setError('')}, 3000)
   }
   return (
     <div className="auth-bg">
@@ -79,7 +79,13 @@ export function LoginPage() {
           </div>
           <button className="btn-submit" type="submit">entrar</button>
         </form>
-        <p>{error}</p>
+
+        {error &&(
+        <div className='container-error'>
+        <p className='error-msg'>{error}</p>
+        </div>
+          )
+        }
 
         <p className="auth-footer">
           Não tem conta?{' '}

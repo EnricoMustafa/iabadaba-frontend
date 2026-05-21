@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import { authServices } from '../services/auth'
 
 interface User {
@@ -21,8 +21,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
 
   const login = async (email: string, password: string) => {
-    const data = await authServices.login(email, password)
-    setUser(data.user)
+    await authServices.login(email, password)
+    const user = await authServices.me()
+    setUser(user)
   }
 
   const register = async (name: string, email: string, password: string) => {
@@ -33,6 +34,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     authServices.logout()
     setUser(null)
   }
+
+  useEffect(() => {
+    const restore = async () => {
+      const verified = localStorage.getItem('token');
+      if(verified){
+        const user = await authServices.me();
+        setUser(user)
+      }
+    }
+    restore()
+  },  []);
 
   return (
     <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, register, logout }}>

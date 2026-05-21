@@ -281,3 +281,17 @@
 .auth-link:hover {
   opacity: 1;
 }
+
+.container-error{
+  min-height: 1.2em;
+  padding:14px;
+  background-color: rgba(248, 0, 0, 0.306);
+  border-radius: 6px;
+  border: 1px solid rgb(224, 117, 117);
+}
+
+.error-msg{
+  display:flex;
+  justify-content: center;
+  color: red;
+}

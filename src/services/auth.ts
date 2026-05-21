@@ -14,4 +14,9 @@ export const authServices = {
     logout: () => {
         localStorage.removeItem('token')
     },
+
+    me: async () => {
+        const {data} = await api.get('/auth/me')
+        return data;
+    }
 }
